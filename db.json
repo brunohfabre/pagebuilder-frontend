@@ -1,0 +1,38 @@
+{
+  "layouts": [],
+  "renderers": [],
+  "routes": [
+    {
+      "id": "4bda21e7-2409-4ee2-b382-d0327ab51ede",
+      "label": "Home",
+      "route": "/home",
+      "type": "route"
+    }
+  ],
+  "cars": [
+    {
+      "id": 1,
+      "name": "GTR",
+      "color": "Black",
+      "fabrication": "2009-04-20"
+    },
+    {
+      "name": "Tesla Model S2",
+      "color": "Red",
+      "fabrication": "1",
+      "id": 2
+    },
+    {
+      "name": "Teste 1",
+      "color": "Teste 2",
+      "fabrication": "Teste 3",
+      "id": 3
+    },
+    {
+      "name": "vini",
+      "color": "vini",
+      "fabrication": "vini",
+      "id": 4
+    }
+  ]
+}
