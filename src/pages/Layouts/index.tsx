@@ -36,8 +36,6 @@ export function Layouts() {
     return response.data
   })
 
-  console.log(data)
-
   async function handleDelete(id: string) {
     try {
       setLoading(true)

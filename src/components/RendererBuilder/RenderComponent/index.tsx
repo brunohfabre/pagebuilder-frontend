@@ -2,7 +2,9 @@ import { Text } from '@siakit/text'
 
 import { NodeType } from '../../../pages/Routes/Route'
 import { ButtonComponent } from './components/ButtonComponent'
+import { CardComponent } from './components/CardComponent'
 import { FlexComponent } from './components/FlexComponent'
+import { FooterComponent } from './components/FooterComponent'
 import { FormComponent } from './components/FormComponent'
 import { HeadingComponent } from './components/HeadingComponent'
 import { OutletComponent } from './components/OutletComponent'
@@ -25,6 +27,14 @@ export function RenderComponent({
 
   if (node.type === 'flex') {
     return <FlexComponent node={node} onDelete={onDelete} items={items} />
+  }
+
+  if (node.type === 'card') {
+    return <CardComponent node={node} onDelete={onDelete} items={items} />
+  }
+
+  if (node.type === 'footer') {
+    return <FooterComponent node={node} onDelete={onDelete} items={items} />
   }
 
   if (node.type === 'text') {

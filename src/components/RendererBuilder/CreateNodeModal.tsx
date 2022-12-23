@@ -61,7 +61,9 @@ export function CreateNodeModal({ onCreate }: CreateNodeModalProps) {
         parentId,
       } as any
 
-      if (data.type === 'flex' || data.type === 'form') {
+      if (
+        ['flex', 'form', 'card', 'footer', 'footer-left'].includes(data.type)
+      ) {
         node.children = []
       }
 
@@ -91,6 +93,14 @@ export function CreateNodeModal({ onCreate }: CreateNodeModalProps) {
                 {
                   value: 'flex',
                   label: 'flex',
+                },
+                {
+                  value: 'card',
+                  label: 'card',
+                },
+                {
+                  value: 'footer',
+                  label: 'footer',
                 },
                 {
                   value: 'text',
@@ -183,10 +193,38 @@ export function CreateNodeModal({ onCreate }: CreateNodeModalProps) {
                   />
 
                   <Select
+                    name="variant"
+                    label="variant"
+                    placeholder="variant"
+                    options={[
+                      { value: 'primary', label: 'primary' },
+                      { value: 'secondary', label: 'secondary' },
+                      { value: 'ghost', label: 'ghost' },
+                    ]}
+                  />
+
+                  <Select
+                    name="colorScheme"
+                    label="colorScheme"
+                    placeholder="colorScheme"
+                    options={[
+                      { value: 'red', label: 'red' },
+                      { value: 'green', label: 'green' },
+                      { value: 'gray', label: 'gray' },
+                    ]}
+                  />
+
+                  <Select
                     name="action"
                     label="action"
                     placeholder="action"
-                    options={[{ value: 'navigate', label: 'navigate' }]}
+                    options={[
+                      { value: 'navigate', label: 'Navigate' },
+                      {
+                        value: 'go-back',
+                        label: 'Go back',
+                      },
+                    ]}
                   />
 
                   <Scope path="to">

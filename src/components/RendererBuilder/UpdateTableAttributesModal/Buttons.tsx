@@ -6,7 +6,7 @@ import { v4 as uuid } from 'uuid'
 
 import { Button } from '@siakit/button'
 import { Footer } from '@siakit/footer'
-import { TextInput } from '@siakit/form-components'
+import { TextInput, Select, OptionType } from '@siakit/form-components'
 import { IconButton } from '@siakit/icon-button'
 import { Flex } from '@siakit/layout'
 import { TabsContent } from '@siakit/tabs'
@@ -17,7 +17,7 @@ import { useUpdateTableStore } from '../stores/updateTableStore'
 
 type ButtonType = {
   label: string
-  variant: string
+  variant: OptionType | null
   route: string
 }
 
@@ -25,6 +25,21 @@ type ButtonsProps = {
   onUpdate: (node: NodeType) => void
   node: NodeType
 }
+
+const variants = [
+  {
+    value: 'primary',
+    label: 'Primary',
+  },
+  {
+    value: 'secondary',
+    label: 'Secondary',
+  },
+  {
+    value: 'ghost',
+    label: 'Ghost',
+  },
+]
 
 export function Buttons({ onUpdate, node }: ButtonsProps) {
   const [buttons, setButtons] = useState<{ [key: string]: ButtonType }>({})
@@ -37,7 +52,18 @@ export function Buttons({ onUpdate, node }: ButtonsProps) {
     if (node?.attributes?.buttons?.length) {
       setButtons(
         node.attributes?.buttons.reduce(
-          (acc: { [key: string]: ButtonType }, item: ButtonType) => {
+          (acc: { [key: string]: ButtonType }, item: any) => {
+            const findVariant = variants.find(
+              (variant) => variant.value === item.variant,
+            )
+
+            if (findVariant) {
+              return {
+                ...acc,
+                [uuid()]: { ...item, variant: findVariant },
+              }
+            }
+
             return {
               ...acc,
               [uuid()]: item,
@@ -54,7 +80,10 @@ export function Buttons({ onUpdate, node }: ButtonsProps) {
       ...node,
       attributes: {
         ...node.attributes,
-        buttons: Object.entries(buttons).map(([_, item]) => item),
+        buttons: Object.entries(buttons).map(([_, item]) => ({
+          ...item,
+          variant: item.variant?.value,
+        })),
       } as any,
     }
 
@@ -83,7 +112,7 @@ export function Buttons({ onUpdate, node }: ButtonsProps) {
 
               <Flex flex direction="column">
                 <Text size="sm">variant</Text>
-                <TextInput
+                <Select
                   value={buttons[key].variant}
                   onChange={(value) => {
                     setButtons((prevState) =>
@@ -92,6 +121,7 @@ export function Buttons({ onUpdate, node }: ButtonsProps) {
                       }),
                     )
                   }}
+                  options={variants}
                 />
               </Flex>
 
@@ -133,7 +163,7 @@ export function Buttons({ onUpdate, node }: ButtonsProps) {
                   ...prevState,
                   [uuid()]: {
                     label: '',
-                    variant: '',
+                    variant: null,
                     route: '',
                   },
                 }))

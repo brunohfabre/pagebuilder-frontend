@@ -6,7 +6,7 @@ import { v4 as uuid } from 'uuid'
 
 import { Button } from '@siakit/button'
 import { Footer } from '@siakit/footer'
-import { TextInput } from '@siakit/form-components'
+import { OptionType, Select, TextInput } from '@siakit/form-components'
 import { IconButton } from '@siakit/icon-button'
 import { Flex } from '@siakit/layout'
 import { TabsContent } from '@siakit/tabs'
@@ -17,14 +17,27 @@ import { useUpdateTableStore } from '../stores/updateTableStore'
 
 type ActionType = {
   label: string
-  action: string
+  action: OptionType | null
   route: string
+  title: string
+  description: string
 }
 
 type ActionsProps = {
   onUpdate: (node: NodeType) => void
   node: NodeType
 }
+
+const actionsOptions = [
+  {
+    value: 'navigate',
+    label: 'Navigate',
+  },
+  {
+    value: 'delete',
+    label: 'Delete',
+  },
+]
 
 export function Actions({ onUpdate, node }: ActionsProps) {
   const [actions, setActions] = useState<{ [key: string]: ActionType }>({})
@@ -37,7 +50,21 @@ export function Actions({ onUpdate, node }: ActionsProps) {
     if (node?.attributes?.actions?.length) {
       setActions(
         node.attributes?.actions.reduce(
-          (acc: { [key: string]: ActionType }, item: ActionType) => {
+          (acc: { [key: string]: ActionType }, item: any) => {
+            const findAction = actionsOptions.find(
+              (action) => action.value === item.action,
+            )
+
+            if (findAction) {
+              return {
+                ...acc,
+                [uuid()]: {
+                  ...item,
+                  action: findAction,
+                },
+              }
+            }
+
             return {
               ...acc,
               [uuid()]: item,
@@ -54,7 +81,10 @@ export function Actions({ onUpdate, node }: ActionsProps) {
       ...node,
       attributes: {
         ...node.attributes,
-        actions: Object.entries(actions).map(([_, item]) => item),
+        actions: Object.entries(actions).map(([_, item]) => ({
+          ...item,
+          action: item.action?.value,
+        })),
       } as any,
     }
 
@@ -83,7 +113,9 @@ export function Actions({ onUpdate, node }: ActionsProps) {
 
               <Flex flex direction="column">
                 <Text size="sm">action</Text>
-                <TextInput
+
+                <Select
+                  options={actionsOptions}
                   value={actions[key].action}
                   onChange={(value) => {
                     setActions((prevState) =>
@@ -103,6 +135,34 @@ export function Actions({ onUpdate, node }: ActionsProps) {
                     setActions((prevState) =>
                       produce(prevState, (draft) => {
                         draft[key].route = value
+                      }),
+                    )
+                  }}
+                />
+              </Flex>
+
+              <Flex flex direction="column">
+                <Text size="sm">title</Text>
+                <TextInput
+                  value={actions[key].title}
+                  onChange={(value) => {
+                    setActions((prevState) =>
+                      produce(prevState, (draft) => {
+                        draft[key].title = value
+                      }),
+                    )
+                  }}
+                />
+              </Flex>
+
+              <Flex flex direction="column">
+                <Text size="sm">description</Text>
+                <TextInput
+                  value={actions[key].description}
+                  onChange={(value) => {
+                    setActions((prevState) =>
+                      produce(prevState, (draft) => {
+                        draft[key].description = value
                       }),
                     )
                   }}
@@ -133,8 +193,10 @@ export function Actions({ onUpdate, node }: ActionsProps) {
                   ...prevState,
                   [uuid()]: {
                     label: '',
-                    action: '',
+                    action: null,
                     route: '',
+                    title: '',
+                    description: '',
                   },
                 }))
               }

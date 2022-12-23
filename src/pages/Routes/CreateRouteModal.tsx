@@ -1,4 +1,5 @@
 import { useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import * as yup from 'yup'
 
@@ -47,6 +48,8 @@ export function CreateRouteModal({
   open,
   onOpenChange,
 }: CreateRouteModalProps) {
+  const navigate = useNavigate()
+
   const formRef = useRef<FormHandles>(null)
 
   const { setLoading } = useLoading()
@@ -96,7 +99,14 @@ export function CreateRouteModal({
 
       const { label, route, layoutId, rendererId } = data
 
-      await api.post('/routes', { label, route, layoutId, rendererId })
+      const response = await api.post('/routes', {
+        label,
+        route,
+        layoutId,
+        rendererId,
+      })
+
+      navigate(`/routes/${response.data.id}`)
 
       queryClient.invalidateQueries(['routes'])
 

@@ -67,7 +67,7 @@ export function AttributesDrawer({ onUpdate }: AttributesDrawerProps) {
         css={{ overflow: 'auto' }}
       >
         <Flex flex padding direction="column" overflow>
-          {node.type === 'flex' && (
+          {(node.type === 'flex' || node.type === 'card') && (
             <>
               <TextInput name="flex" label="flex" placeholder="flex" />
 
@@ -143,8 +143,6 @@ export function AttributesDrawer({ onUpdate }: AttributesDrawerProps) {
 
           {node.type === 'button' && (
             <>
-              <TextInput name="label" label="label" placeholder="label" />
-
               <Select
                 name="type"
                 label="type"
@@ -155,11 +153,46 @@ export function AttributesDrawer({ onUpdate }: AttributesDrawerProps) {
                 ]}
               />
 
+              <TextInput name="label" label="label" placeholder="label" />
+              <TextInput
+                name="alternativeLabel"
+                label="alternative label"
+                placeholder="alternative label"
+              />
+
+              <Select
+                name="variant"
+                label="variant"
+                placeholder="variant"
+                options={[
+                  { value: 'primary', label: 'primary' },
+                  { value: 'secondary', label: 'secondary' },
+                  { value: 'ghost', label: 'ghost' },
+                ]}
+              />
+
+              <Select
+                name="colorScheme"
+                label="colorScheme"
+                placeholder="colorScheme"
+                options={[
+                  { value: 'red', label: 'red' },
+                  { value: 'green', label: 'green' },
+                  { value: 'gray', label: 'gray' },
+                ]}
+              />
+
               <Select
                 name="action"
                 label="action"
                 placeholder="action"
-                options={[{ value: 'navigate', label: 'navigate' }]}
+                options={[
+                  { value: 'navigate', label: 'Navigate' },
+                  {
+                    value: 'go-back',
+                    label: 'Go back',
+                  },
+                ]}
               />
 
               <Scope path="to">

@@ -1,4 +1,5 @@
 import { useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import * as yup from 'yup'
 
@@ -33,6 +34,8 @@ export function CreateLayoutModal({
   open,
   onOpenChange,
 }: CreateLayoutModalProps) {
+  const navigate = useNavigate()
+
   const formRef = useRef<FormHandles>(null)
 
   const queryClient = useQueryClient()
@@ -51,6 +54,8 @@ export function CreateLayoutModal({
       const response = await api.post('/layouts', {
         label,
       })
+
+      navigate(`/layouts/${response.data.id}`)
 
       queryClient.setQueryData(['layouts'], (prevState: any) => [
         ...prevState,
